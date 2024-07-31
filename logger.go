@@ -150,7 +150,7 @@ func initLogger(options ...option.Option) *logger {
 		ParseLevel(option.LogLevel),
 	)
 
-	l.logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zapcore.ErrorLevel))
+	l.logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(option.CallerSkip), zap.AddStacktrace(zapcore.ErrorLevel))
 	l.sugaredLogger = l.logger.Sugar()
 	l.otelLogger = otelzap.NewLogger(l.logger)
 	l.otelSugaredLogger = otelzap.NewSugaredLogger(l.sugaredLogger)

@@ -1,4 +1,4 @@
-# drlog
+# easylog
 
 `easylog` 是一个基于 [lumberjack](https://github.com/natefinch/lumberjack) 和 [zap](https://github.com/uber-go/zap) 封装的的golang日志库, 已在生产环境使用。
 
@@ -52,3 +52,14 @@ logger = easylog.InitGlobalLogger(
 easylog.ReplaceLogger(logger)
 ```
 
+### 配置CallerSkip,用于控制展示的call信息
+
+```go
+// AddCallerSkip increases the number of callers skipped by caller annotation
+// (as enabled by the AddCaller option). When building wrappers around the
+// Logger and SugaredLogger, supplying this Option prevents zap from always
+// reporting the wrapper code as the caller.
+log := drlog.InitGlobalLogger(option.WithCallerSkip(2))
+defer log.Sync()
+drlog.Info(" some error to log")
+```

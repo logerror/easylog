@@ -32,6 +32,8 @@ var (
 	LogLevel = "info"
 
 	ConsoleRequired = true
+
+	CallerSkip = 1
 )
 
 type (
@@ -112,4 +114,22 @@ func WithConsole(required bool) Option {
 
 func (o *logConsoleOption) Apply() {
 	ConsoleRequired = o.Required
+}
+
+// AddCallerSkip increases the number of callers skipped by caller annotation
+// (as enabled by the AddCaller option). When building wrappers around the
+// Logger and SugaredLogger, supplying this Option prevents zap from always
+// reporting the wrapper code as the caller.
+type logCallerSkipOption struct {
+	CallerSkip int
+}
+
+func WithCallerSkip(callerSkip int) Option {
+	return &logCallerSkipOption{
+		CallerSkip: callerSkip,
+	}
+}
+
+func (o *logCallerSkipOption) Apply() {
+	CallerSkip = o.CallerSkip
 }
