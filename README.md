@@ -42,7 +42,7 @@ easylog.Info(" some error to log")
 ```golang
 logger = easylog.InitGlobalLogger(
     option.WithLogLevel("info"),
-    option.WithLogFile(logFilePath, 5, false),
+    option.WithLogFile(logFilePath, 5, 0, 0, false),
     option.WithConsole(false),
 )
 ```
@@ -59,7 +59,7 @@ easylog.ReplaceLogger(logger)
 // (as enabled by the AddCaller option). When building wrappers around the
 // Logger and SugaredLogger, supplying this Option prevents zap from always
 // reporting the wrapper code as the caller.
-log := drlog.InitGlobalLogger(option.WithCallerSkip(2))
+log := drlog.InitGlobalLogger(option.WithCallerSkip(1))
 defer log.Sync()
 drlog.Info(" some error to log")
 ```

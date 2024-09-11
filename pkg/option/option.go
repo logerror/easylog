@@ -20,20 +20,20 @@ var (
 	// MaxBackups is the maximum number of old log files to retain.  The default
 	// is to retain all old log files (though MaxAge may still cause them to get
 	// deleted.)
-	MaxBackups = 1
+	MaxBackups int
 
 	// MaxAge is the maximum number of days to retain old log files based on the
 	// timestamp encoded in their filename.  Note that a day is defined as 24
 	// hours and may not exactly correspond to calendar days due to daylight
 	// savings, leap seconds, etc. The default is not to remove old log files
 	// based on age.
-	MaxAge = 1
+	MaxAge int
 
 	LogLevel = "info"
 
 	ConsoleRequired = true
 
-	CallerSkip = 1
+	CallerSkip = 2
 )
 
 type (
@@ -67,22 +67,39 @@ type logFileOption struct {
 	LogFilePath   string
 	LogFileSizeMB int
 	Compress      bool
+	MaxBackups    int
+	MaxAge        int
+}
+
+func WithLogFilePath(logFilePath string) Option {
+	return &logFileOption{
+		LogFilePath: logFilePath,
+	}
 }
 
 // WithLogFile configures the logger to write logs to a file using Lumberjack.
-func WithLogFile(logFilePath string, logFileSizeMB int, compress bool) Option {
+func WithLogFile(logFilePath string, logFileSizeMB, maxBackups, maxAge int, compress bool) Option {
 	return &logFileOption{
 		LogFilePath:   logFilePath,
 		LogFileSizeMB: logFileSizeMB,
 		Compress:      compress,
+		MaxBackups:    maxBackups,
+		MaxAge:        maxAge,
 	}
 }
 
 func (o *logFileOption) Apply() {
 	if o.LogFilePath != "" {
 		LogFilePath = o.LogFilePath
-		LogFileSizeMB = o.LogFileSizeMB
+		if o.LogFileSizeMB == 0 {
+			LogFileSizeMB = 100
+		} else {
+			LogFileSizeMB = o.LogFileSizeMB
+		}
+
 		Compress = o.Compress
+		MaxBackups = o.MaxBackups
+		MaxAge = o.MaxAge
 	}
 }
 
